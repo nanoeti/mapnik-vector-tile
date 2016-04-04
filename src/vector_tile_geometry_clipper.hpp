@@ -161,7 +161,7 @@ public:
             return;
         }
         //std::deque<mapnik::geometry::line_string<int64_t>> result;
-        mapnik::geometry::multi_line_string<int64_t> result;
+//        mapnik::geometry::multi_line_string<int64_t> result;
         mapnik::geometry::linear_ring<std::int64_t> clip_box;
         clip_box.reserve(5);
         clip_box.emplace_back(tile_clipping_extent_.minx(),tile_clipping_extent_.miny());
@@ -169,12 +169,17 @@ public:
         clip_box.emplace_back(tile_clipping_extent_.maxx(),tile_clipping_extent_.maxy());
         clip_box.emplace_back(tile_clipping_extent_.minx(),tile_clipping_extent_.maxy());
         clip_box.emplace_back(tile_clipping_extent_.minx(),tile_clipping_extent_.miny());
-        boost::geometry::intersection(clip_box, geom, result);
-        if (result.empty())
-        {
-            return;
+//        boost::geometry::intersects(clip_box, geom, result);
+//        if (result.empty())
+//        {
+//            return;
+//        }
+//        next_(result);
+
+//         Avoid road labels clipping
+        if (boost::geometry::intersects(clip_box, geom)) {
+            next_(geom);
         }
-        next_(result);
     }
 
     void operator() (mapnik::geometry::multi_line_string<std::int64_t> & geom)
@@ -192,20 +197,25 @@ public:
         clip_box.emplace_back(tile_clipping_extent_.minx(),tile_clipping_extent_.maxy());
         clip_box.emplace_back(tile_clipping_extent_.minx(),tile_clipping_extent_.miny());
         boost::geometry::unique(geom);
-        mapnik::geometry::multi_line_string<int64_t> results;
-        for (auto const& line : geom)
-        {
-            if (line.size() < 2)
-            {
-               continue;
-            }
-            boost::geometry::intersection(clip_box, line, results);
-        }
-        if (results.empty())
-        {
-            return;
-        }
-        next_(results);
+
+//        Avoid road labels clipping
+
+//        mapnik::geometry::multi_line_string<int64_t> results;
+//        for (auto const& line : geom)
+//        {
+//            if (line.size() < 2)
+//            {
+//               continue;
+//            }
+//            boost::geometry::intersection(clip_box, line, results);
+//        }
+//        if (results.empty())
+//        {
+//            return;
+//        }
+//        next_(results);
+
+        next_(geom);
     }
 
     void operator() (mapnik::geometry::polygon<std::int64_t> & geom)
