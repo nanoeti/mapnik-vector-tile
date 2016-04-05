@@ -26,7 +26,8 @@ public:
                     unsigned x,
                     unsigned y,
                     unsigned z,
-                    bool use_tile_extent = false);
+                    bool use_tile_extent = false,
+                    mapnik::expression_ptr filter_expr = mapnik::expression_ptr(nullptr));
     virtual ~tile_datasource_pbf();
     datasource::datasource_t type() const;
     featureset_ptr features(query const& q) const;
@@ -59,6 +60,8 @@ private:
     std::vector<protozero::pbf_reader> features_;
     std::vector<std::string> layer_keys_;
     layer_pbf_attr_type layer_values_;
+
+    mapnik::expression_ptr filter_expr_;
 };
 
 } // end ns vector_tile_impl

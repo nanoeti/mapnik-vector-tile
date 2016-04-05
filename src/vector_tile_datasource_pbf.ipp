@@ -37,7 +37,8 @@ tile_datasource_pbf::tile_datasource_pbf(protozero::pbf_reader const& layer,
                                          unsigned x,
                                          unsigned y,
                                          unsigned z,
-                                         bool use_tile_extent)
+                                         bool use_tile_extent,
+                                         mapnik::expression_ptr filter_expr)
     : datasource(parameters()),
       desc_("in-memory PBF encoded datasource","utf-8"),
       attributes_added_(false),
@@ -52,7 +53,8 @@ tile_datasource_pbf::tile_datasource_pbf(protozero::pbf_reader const& layer,
       tile_y_(0.0),
       scale_(0.0),
       version_(1), // Version == 1 is the default because it was not required until v2 to have this field
-      type_(datasource::Vector)
+      type_(datasource::Vector),
+      filter_expr_(filter_expr)
 {
     double resolution = mapnik::EARTH_CIRCUMFERENCE/(1 << z_);
     tile_x_ = -0.5 * mapnik::EARTH_CIRCUMFERENCE + x_ * resolution;
@@ -187,7 +189,7 @@ featureset_ptr tile_datasource_pbf::features(query const& q) const
     }
     mapnik::filter_in_box filter(q.get_bbox());
     return std::make_shared<tile_featureset_pbf<mapnik::filter_in_box> >
-        (filter, get_tile_extent(), q.get_unbuffered_bbox(), q.property_names(), features_, tile_x_, tile_y_, scale_, layer_keys_, layer_values_, version_);
+        (filter, get_tile_extent(), q.get_unbuffered_bbox(), q.property_names(), features_, tile_x_, tile_y_, scale_, layer_keys_, layer_values_, version_, filter_expr_);
 }
 
 featureset_ptr tile_datasource_pbf::features_at_point(coord2d const& pt, double tol) const
@@ -209,7 +211,7 @@ featureset_ptr tile_datasource_pbf::features_at_point(coord2d const& pt, double 
         names.insert(key);
     }
     return std::make_shared<tile_featureset_pbf<filter_at_point> >
-        (filter, get_tile_extent(), get_tile_extent(), names, features_, tile_x_, tile_y_, scale_, layer_keys_, layer_values_, version_);
+        (filter, get_tile_extent(), get_tile_extent(), names, features_, tile_x_, tile_y_, scale_, layer_keys_, layer_values_, version_, filter_expr_);
 }
 
 void tile_datasource_pbf::set_envelope(box2d<double> const& bbox)

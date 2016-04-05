@@ -38,7 +38,8 @@ public:
                     double scale,
                     std::vector<std::string> const& layer_keys,
                     layer_pbf_attr_type const& layer_values,
-                    unsigned version);
+                    unsigned version,
+                    mapnik::expression_ptr filter_expr);
     
     virtual ~tile_featureset_pbf() {}
 
@@ -60,6 +61,7 @@ private:
     unsigned version_;
     mapnik::transcoder tr_;
     mapnik::context_ptr ctx_;
+    mapnik::expression_ptr filter_expr_;
 };
 
 } // end ns vector_tile_impl

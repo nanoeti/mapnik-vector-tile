@@ -10,6 +10,8 @@
 #include <mapnik/raster.hpp>
 #include <mapnik/unicode.hpp>
 #include <mapnik/view_transform.hpp>
+#include <mapnik/function_call.hpp>
+#include <mapnik/expression_evaluator.hpp>
 #if defined(DEBUG)
 #include <mapnik/debug.hpp>
 #endif
@@ -34,7 +36,8 @@ tile_featureset_pbf<Filter>::tile_featureset_pbf(Filter const& filter,
                                                  double scale,
                                                  std::vector<std::string> const& layer_keys,
                                                  layer_pbf_attr_type const& layer_values,
-                                                 unsigned version)
+                                                 unsigned version,
+                                                 mapnik::expression_ptr filter_expr)
         : filter_(filter),
           tile_extent_(tile_extent),
           unbuffered_query_(unbuffered_query),
@@ -49,7 +52,8 @@ tile_featureset_pbf<Filter>::tile_featureset_pbf(Filter const& filter,
           itr_(0),
           version_(version),
           tr_("utf-8"),
-          ctx_(std::make_shared<mapnik::context_type>())
+          ctx_(std::make_shared<mapnik::context_type>()),
+            filter_expr_(filter_expr)
 {
     std::set<std::string>::const_iterator pos = attribute_names.begin();
     std::set<std::string>::const_iterator end = attribute_names.end();
@@ -254,6 +258,16 @@ feature_ptr tile_featureset_pbf<Filter>::next()
         }
         else if (has_geometry)
         {
+            //Filter features
+            if (filter_expr_) {
+                attributes vars;
+                value_type result = util::apply_visitor(evaluate<feature_impl,value_type,attributes>(*feature,vars),*filter_expr_);
+                if (!result.to_bool())
+                {
+                    continue;
+                }
+            }
+
             if (!has_geometry_type)
             {
                 if (version_ == 1)
