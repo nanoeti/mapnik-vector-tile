@@ -11,6 +11,7 @@
 #include <mapnik/unicode.hpp>
 #include <mapnik/util/variant.hpp>
 #include <mapnik/view_transform.hpp>
+#include <mapnik/expression.hpp>
 
 // std
 #include <set>

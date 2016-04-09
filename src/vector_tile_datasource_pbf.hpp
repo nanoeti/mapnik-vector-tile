@@ -5,6 +5,7 @@
 #include <mapnik/box2d.hpp>
 #include <mapnik/datasource.hpp>
 #include <mapnik/util/variant.hpp>
+#include <mapnik/expression.hpp>
 
 // protozero
 #include <protozero/pbf_reader.hpp>
