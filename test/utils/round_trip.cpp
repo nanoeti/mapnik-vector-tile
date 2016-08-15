@@ -81,9 +81,13 @@ mapnik::geometry::geometry<double> round_trip(mapnik::geometry::geometry<double>
         {
             geometry_type = feature_reader.get_enum();
         }
+        else
+        {
+            feature_reader.skip();
+        }
     }
-    mapnik::vector_tile_impl::GeometryPBF<double> geoms(geom_itr, 0, 0, 1000, -1000);
-    return mapnik::vector_tile_impl::decode_geometry(geoms, geometry_type, 2);
+    mapnik::vector_tile_impl::GeometryPBF geoms(geom_itr);
+    return mapnik::vector_tile_impl::decode_geometry<double>(geoms, geometry_type, 2, 0.0, 0.0, 1000.0, -1000.0);
 }
 
 } // end ns

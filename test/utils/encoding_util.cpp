@@ -7,12 +7,13 @@
 // mapnik
 #include <mapnik/vertex.hpp>
 #include <mapnik/geometry.hpp>
-#include <mapnik/geometry_adapters.hpp>
 #include <mapnik/vertex_processor.hpp>
 
 // test utils
 #include "encoding_util.hpp"
 #include "decoding_util.hpp"
+
+#include <iostream>
 
 using namespace mapnik::geometry;
 
@@ -75,8 +76,12 @@ std::string compare_pbf(mapnik::geometry::geometry<std::int64_t> const& g, unsig
         {
             geometry_type = feature_reader.get_enum();
         }
+        else
+        {
+            feature_reader.skip();
+        }
     }
-    mapnik::vector_tile_impl::GeometryPBF<double> geoms(geom_itr, 0.0, 0.0, 1.0, 1.0);
-    auto g2 = mapnik::vector_tile_impl::decode_geometry(geoms, geometry_type, version);
+    mapnik::vector_tile_impl::GeometryPBF geoms(geom_itr);
+    auto g2 = mapnik::vector_tile_impl::decode_geometry<double>(geoms, geometry_type, version, 0.0, 0.0, 1.0, 1.0);
     return decode_to_path_string(g2);
 }

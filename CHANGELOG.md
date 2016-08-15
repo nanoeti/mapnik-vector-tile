@@ -1,5 +1,35 @@
 # Changelog
 
+## 1.2.1
+
+- Updated clipper
+- Upgrade to clang-3.8
+- Works with latest variant (stricter type matching) 
+
+## 1.2.0
+
+- Big overhaul to the interface around the vector tile decoder
+- Slight performance increase in decoder
+- Fixed a bug around throwing on incorrect winding order incorrectly when the exterior ring in a polygon was dropped by its extent but an interior ring was included.
+
+## 1.1.2
+
+- Fix performance regression when passing raster through vector tile
+
+## 1.1.1
+
+- Corrected for numerical precision issue when using decoder where it was incorrectly considering very small triangles as having zero area.
+
+## 1.1.0
+
+- Changed defaults for `merge_from_buffer`. Now the tile loading API does not auto-upgrade from v1->v2 or validate by default.
+  The `upgrade` and `validate` behavior are now options to `merge_from_buffer` and `merge_from_compressed_buffer`
+
+## 1.0.6
+
+- Removed boost simplification and implemented custom douglas peucker for big speed boost.
+- Updated the version of the clipper used. 
+
 ## 1.0.5
 
 - Several updates to the version of the clipper used. 
