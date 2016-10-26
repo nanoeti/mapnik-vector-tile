@@ -40,7 +40,7 @@ public:
                     std::vector<std::string> const& layer_keys,
                     layer_pbf_attr_type const& layer_values,
                     unsigned version,
-                    mapnik::expression_ptr filter_expr);
+                    mapnik::expression_ptr filter_expr = nullptr);
     
     virtual ~tile_featureset_pbf() {}
 

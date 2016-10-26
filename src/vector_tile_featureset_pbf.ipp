@@ -53,7 +53,7 @@ tile_featureset_pbf<Filter>::tile_featureset_pbf(Filter const& filter,
           version_(version),
           tr_("utf-8"),
           ctx_(std::make_shared<mapnik::context_type>()),
-            filter_expr_(filter_expr)
+          filter_expr_(filter_expr)
 {
     std::set<std::string>::const_iterator pos = attribute_names.begin();
     std::set<std::string>::const_iterator end = attribute_names.end();
@@ -263,7 +263,7 @@ feature_ptr tile_featureset_pbf<Filter>::next()
             //Filter features
             if (filter_expr_) {
                 attributes vars;
-                value_type result = util::apply_visitor(evaluate<feature_impl,value_type,attributes>(*feature,vars),*filter_expr_);
+                value_type result = util::apply_visitor(evaluate<feature_impl, value_type, attributes>(*feature, vars), *filter_expr_);
                 if (!result.to_bool())
                 {
                     continue;

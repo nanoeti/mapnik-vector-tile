@@ -28,7 +28,7 @@ public:
                     unsigned y,
                     unsigned z,
                     bool use_tile_extent = false,
-                    mapnik::expression_ptr filter_expr = mapnik::expression_ptr(nullptr));
+                    mapnik::expression_ptr filter_expr = nullptr);
     virtual ~tile_datasource_pbf();
     datasource::datasource_t type() const;
     featureset_ptr features(query const& q) const;
