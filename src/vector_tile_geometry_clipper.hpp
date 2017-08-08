@@ -205,8 +205,6 @@ public:
             return;
         }
         next_(results);
-
-        next_(geom);
     }
 
     void operator() (mapnik::geometry::polygon<std::int64_t> & geom)

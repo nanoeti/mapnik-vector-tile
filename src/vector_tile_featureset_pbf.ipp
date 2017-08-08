@@ -211,6 +211,16 @@ feature_ptr tile_featureset_pbf<Filter>::next()
 
             }
         }
+        //Filter features
+        if (filter_expr_) {
+            attributes vars;
+            value_type result = util::apply_visitor(
+                        evaluate<feature_impl, value_type, attributes>(*feature, vars), *filter_expr_);
+            if (!result.to_bool())
+            {
+                continue;
+            }
+        }
         if (has_raster)
         {
             if (reader.get())
@@ -260,16 +270,6 @@ feature_ptr tile_featureset_pbf<Filter>::next()
         }
         else if (has_geometry)
         {
-            //Filter features
-            if (filter_expr_) {
-                attributes vars;
-                value_type result = util::apply_visitor(evaluate<feature_impl, value_type, attributes>(*feature, vars), *filter_expr_);
-                if (!result.to_bool())
-                {
-                    continue;
-                }
-            }
-
             if (!has_geometry_type)
             {
                 if (version_ == 1)
